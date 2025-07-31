@@ -7,7 +7,8 @@ void RawMode :: enable() {
 
     struct termios raw = original_termios;
 
-    raw.c_lflag &= ~(ECHO | ICANON);
+    raw.c_lflag &= ~(ECHO | ICANON | ISIG);
+   // raw.c_oflag &= ~OPOST;
 
     if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1) {
         throw std::runtime_error("Failed to set raw mode");
