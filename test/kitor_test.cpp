@@ -18,6 +18,7 @@ void test_raw_mode() {
 
       assert(!(during.c_lflag & ECHO));
       assert(!(during.c_lflag & ICANON));
+      assert(!(during.c_lflag & ISIG));
     }
 
     tcgetattr(STDIN_FILENO, &after);
