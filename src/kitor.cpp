@@ -18,8 +18,9 @@ void Kitor::run() {
         if (c == 3) {
             break;
         }
-        terminal.refresh(text);
+        
         text.push_back(c);
+        terminal.refresh(text);
     }
 }
 
