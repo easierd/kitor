@@ -9,6 +9,7 @@ class Terminal {
         Terminal();
         void refresh(const std::string&);
         void clear();
+        void delete_last();
 
         void save_state();
         void restore_state();

@@ -47,6 +47,11 @@ void Terminal :: restore_state() {
 }
 
 
+void Terminal :: delete_last() {
+    std:: cout << "\033[1D";
+}
+
+
 Terminal::~Terminal() {
     if (is_raw_enabled) {
         tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios);
