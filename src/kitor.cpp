@@ -9,6 +9,7 @@ Kitor::Kitor(const std::string& filename) :
 
 
 void Kitor::run() {
+    terminal.save_state();
     terminal.clear();
 
     char c;
@@ -26,4 +27,5 @@ void Kitor::run() {
 Kitor::~Kitor() {
     os << text;
     os.close();
+    terminal.restore_state();
 }

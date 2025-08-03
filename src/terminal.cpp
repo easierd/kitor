@@ -31,6 +31,20 @@ void Terminal :: refresh(const std::string& text) {
 }
 
 
+void Terminal :: save_state() {
+        std::cout << "\033[s";
+        std::cout << "\033[?47h";
+        std::cout.flush();
+}
+
+
+void Terminal :: restore_state() {
+        std::cout << "\033[?47l";     
+        std::cout << "\033[u";
+        std::cout.flush();
+}
+
+
 Terminal::~Terminal() {
     if (is_raw_enabled) {
         tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios);
