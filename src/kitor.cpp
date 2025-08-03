@@ -2,21 +2,23 @@
 
 #include <iostream>
 
+
 Kitor::Kitor(const std::string& filename) : 
                 text {""},
                 os{std::ofstream{filename}} {}
 
 
 void Kitor::run() {
+    terminal.clear();
+
     char c;
     while(std:: cin.get(c)) {
         // ascii 3 is Ctrl-C
         if (c == 3) {
             break;
         }
+        terminal.refresh(text);
         text.push_back(c);
-        std::cout<< u8"\033[2J\033[1;1H"; 
-        std::cout<<text;
     }
 }
 

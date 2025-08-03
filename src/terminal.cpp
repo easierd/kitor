@@ -19,6 +19,18 @@ Terminal::Terminal() {
     is_raw_enabled = true;
 }
 
+
+void Terminal :: clear() {
+    std::cout<< "\033[H\033[2J\033[3J"; 
+}
+
+
+void Terminal :: refresh(const std::string& text) {
+    clear();
+    std::cout<<text;
+}
+
+
 Terminal::~Terminal() {
     if (is_raw_enabled) {
         tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios);
