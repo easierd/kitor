@@ -21,13 +21,15 @@ Terminal::Terminal() {
 
 
 void Terminal :: clear() {
-    std::cout<< "\033[H\033[2J\033[3J"; 
+    std::cout<< "\033[H\033[2J\033[3J";
+    std::cout.flush();
 }
 
 
 void Terminal :: refresh(const std::string& text) {
     clear();
     std::cout<<text;
+    std::cout.flush();
 }
 
 
