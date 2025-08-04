@@ -14,6 +14,7 @@ class GapBufferTest {
             test_right();
             test_right_end_of_buffer();
             test_expand();
+            test_right_substring();
         }
     private:
         static void test_insertion() {
@@ -83,6 +84,15 @@ class GapBufferTest {
             assert(buffer.to_string() == "abcde");
         }
 
+        static void test_right_substring() {
+            GapBuffer buffer;
+            buffer.insert('a');
+            buffer.insert('b');
+            assert(buffer.right_substring().empty());
+            buffer.left();
+            assert(buffer.right_substring() == "b");
+        }
+
 
 };
 
@@ -97,6 +107,8 @@ int main(void) {
         std::cerr << "Test failed with unknown exception." << std::endl;
         return EXIT_FAILURE;
     }
+
+    std :: cout << "All tests passed!" << std :: endl;
 
     return EXIT_SUCCESS;
 }
