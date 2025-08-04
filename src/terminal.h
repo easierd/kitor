@@ -11,9 +11,10 @@
 class Terminal {
     public:
         Terminal();
-        void refresh();
         void clear();
+        
         void delete_last();
+
         void cursor_left();
         void cursor_right();
 
@@ -31,4 +32,5 @@ class Terminal {
         bool is_raw_enabled;
 
         void sync_cursor();
+        void refresh();
 };
