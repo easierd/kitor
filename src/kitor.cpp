@@ -5,9 +5,7 @@
 
 
 Kitor::Kitor(const std::string& filename) : 
-                text {""},
                 os{std::ofstream{filename}} {
-    
     terminal.save_state();
     terminal.clear();
 }
@@ -26,15 +24,27 @@ void Kitor::run() {
 
             case Input::DEL: 
                 terminal.delete_last();
-                if (!text.empty()) {
-                    text.pop_back();
-                }
-                terminal.refresh(text);
+                terminal.refresh();
                 break;
             
+            case Input::ESC:
+                std::cin.get(c);
+                if (c == '[') {
+                    std::cin.get(c);
+                    switch (c) {
+                    case 'D':
+                        terminal.cursor_left();
+                        break;
+                    
+                    default:
+                        break;
+                    }
+                }
+                break;
+
             default:
-                text.push_back(c);
-                terminal.refresh(text);
+                terminal.putchar(c);
+                terminal.refresh();
                 break;
         }
     }
@@ -42,7 +52,7 @@ void Kitor::run() {
 
 
 Kitor::~Kitor() {
-    os << text;
+    os << terminal.get_out();
     os.close();
     terminal.restore_state();
 }

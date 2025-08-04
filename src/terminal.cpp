@@ -29,10 +29,16 @@ void Terminal :: clear() {
 }
 
 
-// clear screen and print the given text
-void Terminal :: refresh(const std::string& text) {
+void Terminal :: putchar(char c) {
+    buffer.insert(c);
+}
+
+
+// clear screen, print the text and move the cursor to the right position
+void Terminal :: refresh() {
     clear();
-    std::cout<<text;
+    std::cout << buffer.to_string();
+    std::cout << "\033[" + std::to_string(buffer.get_l() + 1) + "G";
     std::cout.flush();
 }
 
@@ -53,9 +59,21 @@ void Terminal :: restore_state() {
 
 
 void Terminal :: delete_last() {
-    std:: cout << "\033[1D";
+    buffer.del();
+    std::cout << "\033[" + std::to_string(buffer.get_l() + 1) + "G";
 }
 
+
+void Terminal :: cursor_left() {
+    buffer.left();
+    std::cout << "\033[" + std::to_string(buffer.get_l() + 1) + "G";
+}
+
+
+// return the text managed by the gap buffer, without the gap
+std::string Terminal :: get_out() {
+    return buffer.to_string();
+}
 
 
 // disable raw mode

@@ -4,6 +4,7 @@
 #include <string>
 
 #include "terminal.h"
+#include "gap_buffer.h"
 
 class Kitor {
     public:
@@ -11,7 +12,6 @@ class Kitor {
         void run();
         ~Kitor();
     private:
-        std:: string text;
         std:: ofstream os;
         Terminal terminal;
 };
