@@ -31,6 +31,7 @@ void Terminal :: clear() {
 
 void Terminal :: putchar(char c) {
     buffer.insert(c);
+    refresh();
 }
 
 
@@ -38,7 +39,7 @@ void Terminal :: putchar(char c) {
 void Terminal :: refresh() {
     clear();
     std::cout << buffer.to_string();
-    std::cout << "\033[" + std::to_string(buffer.get_l() + 1) + "G";
+    sync_cursor();
     std::cout.flush();
 }
 
@@ -60,13 +61,13 @@ void Terminal :: restore_state() {
 
 void Terminal :: delete_last() {
     buffer.del();
-    std::cout << "\033[" + std::to_string(buffer.get_l() + 1) + "G";
+    refresh();
 }
 
 
 void Terminal :: cursor_left() {
     buffer.left();
-    std::cout << "\033[" + std::to_string(buffer.get_l() + 1) + "G";
+    sync_cursor();
 }
 
 
@@ -82,4 +83,9 @@ Terminal::~Terminal() {
         tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios);
         is_raw_enabled = false;
     }
+}
+
+
+void Terminal :: sync_cursor() {
+    std::cout << "\033[" + std::to_string(buffer.get_l() + 1) + "G";
 }

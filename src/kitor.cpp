@@ -24,7 +24,6 @@ void Kitor::run() {
 
             case Input::DEL: 
                 terminal.delete_last();
-                terminal.refresh();
                 break;
             
             case Input::ESC:
@@ -35,6 +34,7 @@ void Kitor::run() {
                     case 'D':
                         terminal.cursor_left();
                         break;
+                        
                     
                     default:
                         break;
@@ -44,7 +44,6 @@ void Kitor::run() {
 
             default:
                 terminal.putchar(c);
-                terminal.refresh();
                 break;
         }
     }
