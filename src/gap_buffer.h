@@ -18,6 +18,8 @@ class GapBuffer{
         GapBuffer();
         GapBuffer(int sz);
 
+        int get_l();
+
         void insert(char c);
         void del();
         void left();

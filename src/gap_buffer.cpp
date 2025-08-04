@@ -37,6 +37,11 @@ int GapBuffer :: size() {
 }
 
 
+int GapBuffer :: get_l() {
+    return l;
+}
+
+
 // move the cursor to the left - shift the entire gap to the left
 void GapBuffer :: left() {
     if (l > 0) {
