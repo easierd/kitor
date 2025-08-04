@@ -2,6 +2,9 @@
 #include <unistd.h>
 #include <iostream>
 
+
+
+// enable raw mode
 Terminal::Terminal() {
     if (tcgetattr(STDIN_FILENO, &orig_termios) == -1) {
         throw std::runtime_error("Failed to get terminal attributes");
@@ -26,6 +29,7 @@ void Terminal :: clear() {
 }
 
 
+// clear screen and print the given text
 void Terminal :: refresh(const std::string& text) {
     clear();
     std::cout<<text;
@@ -33,6 +37,7 @@ void Terminal :: refresh(const std::string& text) {
 }
 
 
+// save the terminal's state in order to restore it when the program exits
 void Terminal :: save_state() {
     std::cout << "\033[s";
     std::cout << "\033[?47h";
@@ -52,6 +57,8 @@ void Terminal :: delete_last() {
 }
 
 
+
+// disable raw mode
 Terminal::~Terminal() {
     if (is_raw_enabled) {
         tcsetattr(STDIN_FILENO, TCSAFLUSH, &orig_termios);

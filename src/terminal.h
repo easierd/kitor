@@ -3,6 +3,9 @@
 #include <termios.h>
 #include <string>
 
+/* 
+    Interface to the low-level terminal i/o.
+*/
 
 class Terminal {
     public:
