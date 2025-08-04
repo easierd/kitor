@@ -71,6 +71,12 @@ void Terminal :: cursor_left() {
 }
 
 
+void Terminal:: cursor_right() {
+    buffer.right();
+    sync_cursor();
+}
+
+
 // return the text managed by the gap buffer, without the gap
 std::string Terminal :: get_out() {
     return buffer.to_string();

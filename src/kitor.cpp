@@ -34,7 +34,9 @@ void Kitor::run() {
                     case 'D':
                         terminal.cursor_left();
                         break;
-                        
+                    case 'C':
+                        terminal.cursor_right();
+                        break;
                     
                     default:
                         break;

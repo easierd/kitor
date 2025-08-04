@@ -15,6 +15,7 @@ class Terminal {
         void clear();
         void delete_last();
         void cursor_left();
+        void cursor_right();
 
         void putchar(char c);
 
@@ -28,4 +29,6 @@ class Terminal {
         struct termios orig_termios;
         GapBuffer buffer;
         bool is_raw_enabled;
+
+        void sync_cursor();
 };
