@@ -32,5 +32,5 @@ class Terminal {
         bool is_raw_enabled;
 
         void sync_cursor();
-        void refresh();
+        void redraw();
 };

@@ -26,6 +26,7 @@ class GapBuffer{
         void right();
 
         std::string to_string();
+        std::string right_substring();
 
         int size();
 

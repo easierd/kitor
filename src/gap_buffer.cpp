@@ -31,6 +31,15 @@ std::string GapBuffer :: to_string() {
 }
 
 
+
+// return the substring from the cursor to the end of the buffer
+std::string GapBuffer :: right_substring() {
+    auto str = std::make_unique<char[]>(sz - r);
+    std::memcpy(str.get(), text.get() + r, sz - r);
+    return std::string(str.get(), sz - r);
+}
+
+
 // return the size of the entire buffer, including the gap
 int GapBuffer :: size() {
     return sz;

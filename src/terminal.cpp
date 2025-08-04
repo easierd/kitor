@@ -31,14 +31,16 @@ void Terminal :: clear() {
 
 void Terminal :: putchar(char c) {
     buffer.insert(c);
-    refresh();
+    std::cout << c;
+    redraw();
 }
 
 
-// clear screen, print the text and move the cursor to the right position
-void Terminal :: refresh() {
-    clear();
-    std::cout << buffer.to_string();
+// clear the screen from the cursor position to the end of the line, 
+// rewrite the right substring of the buffer
+void Terminal :: redraw() {
+    std::cout << "\033[K";
+    std::cout << buffer.right_substring();
     sync_cursor();
     std::cout.flush();
 }
@@ -61,7 +63,8 @@ void Terminal :: restore_state() {
 
 void Terminal :: delete_last() {
     buffer.del();
-    refresh();
+    std::cout << "\033[D \033[D";
+    sync_cursor();
 }
 
 
@@ -92,6 +95,7 @@ Terminal::~Terminal() {
 }
 
 
+// align buffer gap with the terminal cursor
 void Terminal :: sync_cursor() {
     std::cout << "\033[" + std::to_string(buffer.get_l() + 1) + "G";
 }
