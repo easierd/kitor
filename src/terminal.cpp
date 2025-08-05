@@ -20,6 +20,8 @@ Terminal::Terminal() {
     }
 
     is_raw_enabled = true;
+
+    ioctl(STDIN_FILENO, TIOCGWINSZ, &w);
 }
 
 
@@ -39,7 +41,7 @@ void Terminal :: putchar(char c) {
 // clear the screen from the cursor position to the end of the line, 
 // rewrite the right substring of the buffer
 void Terminal :: redraw() {
-    std::cout << "\033[K";
+    std::cout << "\033[0J";
     std::cout << buffer.right_substring();
     sync_cursor();
     std::cout.flush();
@@ -63,8 +65,16 @@ void Terminal :: restore_state() {
 
 void Terminal :: delete_last() {
     buffer.del();
-    std::cout << "\033[D \033[D";
+    if (buffer.get_l() % wincols() == wincols() - 1) {
+        sync_cursor();
+        std::cout << " ";
+        std::cout.flush();
+    } else {
+        std::cout << "\033[D \033[D";
+    }
     sync_cursor();
+    redraw();
+
 }
 
 
@@ -95,7 +105,21 @@ Terminal::~Terminal() {
 }
 
 
-// align buffer gap with the terminal cursor
+// return the screen's height
+int Terminal::winrows() {
+    return w.ws_row;
+}
+
+
+// return the screen's width
+int Terminal::wincols() {
+    return w.ws_col;
+}
+
+
+// align buffer gap with the terminal cursor - guarantees the class invarian
 void Terminal :: sync_cursor() {
-    std::cout << "\033[" + std::to_string(buffer.get_l() + 1) + "G";
+    int x = 1 + buffer.get_l() / wincols();
+    int y = 1 + buffer.get_l() % wincols(); 
+    std::cout << "\033[" + std::to_string(x) + ";" + std::to_string(y) + "f";
 }

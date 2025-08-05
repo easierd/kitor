@@ -1,6 +1,8 @@
 #pragma once
 
 #include <termios.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
 #include <string>
 
 #include "gap_buffer.h"
@@ -9,6 +11,10 @@
 */
 
 class Terminal {
+
+    // class invariant: the terminal's cursor and
+    // the gap buffer's gap are always aligned
+
     public:
         Terminal();
         void clear();
@@ -25,10 +31,16 @@ class Terminal {
 
         std::string get_out();
 
+        int winrows();
+        int wincols();
+
         ~Terminal();
     private:
         struct termios orig_termios;
+        struct winsize w;
+
         GapBuffer buffer;
+
         bool is_raw_enabled;
 
         void sync_cursor();
