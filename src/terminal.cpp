@@ -3,7 +3,6 @@
 #include <iostream>
 
 
-
 // enable raw mode
 Terminal::Terminal() {
     if (tcgetattr(STDIN_FILENO, &orig_termios) == -1) {
@@ -34,6 +33,13 @@ void Terminal :: clear() {
 void Terminal :: putchar(char c) {
     buffer.insert(c);
     std::cout << c;
+    redraw();
+}
+
+void Terminal :: putseq(const std::string& seq) {
+    buffer.insert(seq[0]);
+    buffer.insert(seq[1]);
+    std :: cout << seq;
     redraw();
 }
 
@@ -117,9 +123,9 @@ int Terminal::wincols() {
 }
 
 
-// align buffer gap with the terminal cursor - guarantees the class invarian
+// align buffer gap with the terminal cursor - guarantees the class invariant
 void Terminal :: sync_cursor() {
     int x = 1 + buffer.get_l() / wincols();
     int y = 1 + buffer.get_l() % wincols(); 
-    std::cout << "\033[" + std::to_string(x) + ";" + std::to_string(y) + "f";
+    std::cout << "\033[" + std::to_string(x) + ";" + std::to_string(y) + "f" << std :: flush;
 }

@@ -4,7 +4,7 @@
 #include <string>
 
 #include "terminal.h"
-#include "gap_buffer.h"
+#include "utf8_reader.h"
 
 class Kitor {
     public:
@@ -12,6 +12,7 @@ class Kitor {
         void run();
         ~Kitor();
     private:
-        std:: ofstream os;
+        std :: ofstream os;
+        UTF8Reader reader;
         Terminal terminal;
 };

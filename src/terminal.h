@@ -24,7 +24,8 @@ class Terminal {
         void cursor_left();
         void cursor_right();
 
-        void putchar(char c);
+        void putchar(char);
+        void putseq(const std::string&);
 
         void save_state();
         void restore_state();

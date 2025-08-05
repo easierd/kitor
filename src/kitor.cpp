@@ -12,11 +12,18 @@ Kitor::Kitor(const std::string& filename) :
 
 
 void Kitor::run() {
-    char c;
     bool is_terminated = false;
-    while((!is_terminated) && (std::cin.get(c))) {
+    while(!is_terminated) {
 
+        auto seq = reader.next_input();
+        if (seq.length() == 2) {
+            terminal.putseq(seq);
+            continue;
+        }
+
+        char c = seq[0];
         auto input = static_cast<Input>(c);
+
         switch (input) {
             case Input::CTRL_C: 
                 is_terminated = true;
@@ -27,9 +34,9 @@ void Kitor::run() {
                 break;
             
             case Input::ESC:
-                std::cin.get(c);
+                c = reader.next_input()[0];
                 if (c == '[') {
-                    std::cin.get(c);
+                    c = reader.next_input()[0];
                     switch (c) {
                     case 'D':
                         terminal.cursor_left();
