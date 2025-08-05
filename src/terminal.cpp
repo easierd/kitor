@@ -37,8 +37,7 @@ void Terminal :: putchar(char c) {
 }
 
 void Terminal :: putseq(const std::string& seq) {
-    buffer.insert(seq[0]);
-    buffer.insert(seq[1]);
+    buffer.insert(seq);
     std :: cout << seq;
     redraw();
 }

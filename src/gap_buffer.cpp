@@ -82,6 +82,14 @@ void GapBuffer :: insert(char c) {
 }
 
 
+// insert a UTF8 sequence at the current position
+void GapBuffer :: insert(const std::string& sequence) {
+    for (char c : sequence) {
+        insert(c);
+    }
+}
+
+
 // delete the character at the left of the cursor
 // there's no need to clean the gap
 void GapBuffer :: del() {

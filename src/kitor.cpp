@@ -16,7 +16,7 @@ void Kitor::run() {
     while(!is_terminated) {
 
         auto seq = reader.next_input();
-        if (seq.length() == 2) {
+        if (seq.length() > 1) {
             terminal.putseq(seq);
             continue;
         }

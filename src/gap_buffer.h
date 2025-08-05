@@ -21,6 +21,7 @@ class GapBuffer{
         int get_l();
 
         void insert(char c);
+        void insert(const std::string& sequence);
         void del();
         void left();
         void right();
