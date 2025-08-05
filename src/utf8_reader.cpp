@@ -22,6 +22,10 @@ std:: string UTF8Reader :: next_input() {
     input += c;
 
     int seq_len = seq_length(c);
+    if (seq_len == - 1) {
+        // TODO: log error
+        return input;
+    }
 
     for (int i = 1; i < seq_len; i++) {
         if ((n = read(STDIN_FILENO, &c, 1)) == -1) {
