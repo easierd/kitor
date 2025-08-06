@@ -8,3 +8,4 @@ target_link_options(kitor PRIVATE -fsanitize=address)
 
 add_executable(gap_buffer_test test/gap_buffer_test.cpp src/gap_buffer.cpp)
 add_executable(utf8_test test/utf8_reader_test.cpp src/utf8_reader.cpp)
+add_executable(code_point_test test/code_point_test.cpp src/code_point.cpp)
