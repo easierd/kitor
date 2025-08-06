@@ -1,5 +1,6 @@
 #include "gap_buffer.h"
 
+#include <algorithm>
 #include <stdexcept>
 #include <cstring>
 
@@ -16,6 +17,7 @@ GapBuffer :: GapBuffer(int sz) {
 
     this->sz = sz;
     this->text = std::make_unique<UTF8CodePoint[]>(sz);
+    this->newlines = {};
     this->l = 0;
     this->r = sz;
 }
@@ -47,15 +49,15 @@ std::string GapBuffer :: right_substring() {
 
 
 // return the size of the entire buffer, including the gap
-int GapBuffer :: size() {
+int GapBuffer :: size() const {
     return sz;
 }
 
 
-int GapBuffer :: get_l() {
+int GapBuffer :: get_l() const {
     return l;
 }
- 
+
 
 // move the cursor to the left - shift the entire gap to the left
 void GapBuffer :: left() {
@@ -84,6 +86,13 @@ void GapBuffer :: insert(const UTF8CodePoint& ucp) {
     if (l == r) {
         expand();
     }
+
+    if (ucp.to_string() == "\n") {
+        // O(log N) guaranteed 
+        auto it = std::lower_bound(newlines.begin(), newlines.end(), l);
+        newlines.insert(it, l);
+    }
+
     text[l++] = std::move(ucp);
 }
 

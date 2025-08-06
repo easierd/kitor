@@ -8,18 +8,21 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "../utf8/code_point.h"
 
 class GapBuffer{
 
     // class invariant: l <= r && sz >= 0
+    //             
 
     public:
         GapBuffer();
         GapBuffer(int sz);
 
-        int get_l();
+        int get_l() const;
+        int size() const;
 
         void insert(const UTF8CodePoint&);
         void del();
@@ -29,8 +32,6 @@ class GapBuffer{
         std::string to_string();
         std::string right_substring();
 
-        int size();
-
         void expand();
 
     private:
@@ -38,6 +39,7 @@ class GapBuffer{
 
         int sz;
         std::unique_ptr<UTF8CodePoint[]> text;
+        std::vector<int> newlines;
         int l;
         int r;
 };
