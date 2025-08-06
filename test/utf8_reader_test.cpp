@@ -2,7 +2,7 @@
 #include<iostream>
 #include<unistd.h>
 #include<fcntl.h>
-#include "../src/utf8_reader.h"
+#include "../src/utf8/utf8_reader.h"
 
 class UTF8ReaderTest {
     public:
