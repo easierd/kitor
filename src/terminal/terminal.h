@@ -10,7 +10,7 @@
 #include <string>
 
 #include "gap_buffer.h"
-#include "code_point.h"
+#include "../utf8/code_point.h"
 
 
 class Terminal {

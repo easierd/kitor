@@ -9,7 +9,7 @@
 #include <memory>
 #include <string>
 
-#include "code_point.h"
+#include "../utf8/code_point.h"
 
 class GapBuffer{
 

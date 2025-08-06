@@ -3,8 +3,8 @@
 #include <fstream>
 #include <string>
 
-#include "terminal.h"
-#include "utf8_reader.h"
+#include "terminal/terminal.h"
+#include "utf8/utf8_reader.h"
 
 class Kitor {
     public:
