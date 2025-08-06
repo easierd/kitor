@@ -30,14 +30,14 @@ class UTF8ReaderTest {
 
             UTF8Reader reader;
 
-            std::string input = reader.next_input();
-            assert(input == "\033");
+            auto input = reader.next_input();
+            assert(input.to_string() == "\033");
 
             input = reader.next_input();
-            assert(input == "[");
+            assert(input.to_string() == "[");
 
             input = reader.next_input();
-            assert(input == "D");
+            assert(input.to_string() == "D");
 
             dup2(original_stdin, STDIN_FILENO);
             close(original_stdin);
@@ -51,9 +51,9 @@ class UTF8ReaderTest {
             dup2(dummy_fd, STDIN_FILENO);
 
             UTF8Reader reader;
-            std::string input = reader.next_input();
+            auto input = reader.next_input();
 
-            assert(input.empty());
+            assert(input.to_string().empty());
 
             dup2(orig_stdin, STDIN_FILENO);
             close(orig_stdin);
@@ -71,10 +71,10 @@ class UTF8ReaderTest {
             close(pipefd[1]);
             UTF8Reader reader;
 
-            std::string input {reader.next_input()};
+            auto input {reader.next_input()};
             std::string expected {c};
 
-            assert(input == expected);
+            assert(input.to_string() == expected);
 
             dup2(orig_stdin, STDIN_FILENO);
             close(orig_stdin);
@@ -92,10 +92,10 @@ class UTF8ReaderTest {
             close(pipefd[1]);
             UTF8Reader reader;
 
-            std::string input {reader.next_input()};
+            auto input {reader.next_input()};
             std::string expected {c};
 
-            assert(input == expected);
+            assert(input.to_string() == expected);
 
             dup2(orig_stdin, STDIN_FILENO);
             close(orig_stdin);
@@ -113,10 +113,10 @@ class UTF8ReaderTest {
             close(pipefd[1]);
             UTF8Reader reader;
 
-            std::string input {reader.next_input()};
+            auto input {reader.next_input()};
             std::string expected {c};
 
-            assert(input == expected);
+            assert(input.to_string() == expected);
 
             dup2(orig_stdin, STDIN_FILENO);
             close(orig_stdin);

@@ -17,7 +17,7 @@ void Kitor::run() {
 
         auto seq = reader.next_input();
         if (seq.length() > 1) {
-            terminal.putseq(seq);
+            terminal.put(seq);
             continue;
         }
 
@@ -52,7 +52,7 @@ void Kitor::run() {
                 break;
 
             default:
-                terminal.putchar(c);
+                terminal.put(seq);
                 break;
         }
     }

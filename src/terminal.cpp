@@ -30,15 +30,11 @@ void Terminal :: clear() {
 }
 
 
-void Terminal :: putchar(char c) {
-    buffer.insert(c);
-    std::cout << c;
-    redraw();
-}
-
-void Terminal :: putseq(const std::string& seq) {
-    buffer.insert(seq);
-    std :: cout << seq;
+// insert the code point into the gap buffer
+// and draw it on the screen
+void Terminal::put(const UTF8CodePoint& ucp) {
+    buffer.insert(ucp);
+    std::cout<<ucp.to_string();
     redraw();
 }
 

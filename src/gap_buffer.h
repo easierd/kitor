@@ -9,10 +9,11 @@
 #include <memory>
 #include <string>
 
+#include "code_point.h"
+
 class GapBuffer{
 
     // class invariant: l <= r && sz >= 0
-
 
     public:
         GapBuffer();
@@ -20,8 +21,7 @@ class GapBuffer{
 
         int get_l();
 
-        void insert(char c);
-        void insert(const std::string& sequence);
+        void insert(const UTF8CodePoint&);
         void del();
         void left();
         void right();
@@ -37,7 +37,7 @@ class GapBuffer{
         static constexpr int DEFAULT_SIZE {1024};
 
         int sz;
-        std::unique_ptr<char[]> text;
+        std::unique_ptr<UTF8CodePoint[]> text;
         int l;
         int r;
 };

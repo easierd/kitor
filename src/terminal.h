@@ -1,3 +1,7 @@
+/* 
+    Interface to the low-level terminal i/o.
+*/
+
 #pragma once
 
 #include <termios.h>
@@ -6,9 +10,8 @@
 #include <string>
 
 #include "gap_buffer.h"
-/* 
-    Interface to the low-level terminal i/o.
-*/
+#include "code_point.h"
+
 
 class Terminal {
 
@@ -24,8 +27,7 @@ class Terminal {
         void cursor_left();
         void cursor_right();
 
-        void putchar(char);
-        void putseq(const std::string&);
+        void put(const UTF8CodePoint&);
 
         void save_state();
         void restore_state();

@@ -3,11 +3,9 @@
 
 #pragma once
 
-#include<string>
+#include "code_point.h"
 
 class UTF8Reader {
     public:
-        std::string next_input();
-    private:
-        int seq_length(char c);
+        UTF8CodePoint next_input();
 };

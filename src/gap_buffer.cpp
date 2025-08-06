@@ -15,7 +15,7 @@ GapBuffer :: GapBuffer(int sz) {
     }
 
     this->sz = sz;
-    this->text = std::make_unique<char[]>(sz);
+    this->text = std::make_unique<UTF8CodePoint[]>(sz);
     this->l = 0;
     this->r = sz;
 }
@@ -23,20 +23,26 @@ GapBuffer :: GapBuffer(int sz) {
 
 // return the actual text without the gap
 std::string GapBuffer :: to_string() {
-    auto str = std::make_unique<char[]>(sz - r + l);
-    std::memcpy(str.get(), text.get(), l);
-    std::memcpy(str.get() + l, text.get() + r, sz - r);
-    
-    return std::string(str.get(), sz - r + l);
+    std::string result {};
+    for (int i = 0; i < l; i++) {
+        result += text[i].to_string();
+    }
+
+    result += right_substring();
+
+    return result;
 }
 
 
 
 // return the substring from the cursor to the end of the buffer
 std::string GapBuffer :: right_substring() {
-    auto str = std::make_unique<char[]>(sz - r);
-    std::memcpy(str.get(), text.get() + r, sz - r);
-    return std::string(str.get(), sz - r);
+    std::string result {};
+    for (int i = r; i < sz; i++) {
+        result += text[i].to_string();
+    }
+
+    return result;
 }
 
 
@@ -49,7 +55,7 @@ int GapBuffer :: size() {
 int GapBuffer :: get_l() {
     return l;
 }
-
+ 
 
 // move the cursor to the left - shift the entire gap to the left
 void GapBuffer :: left() {
@@ -72,21 +78,13 @@ void GapBuffer :: right() {
 }
 
 
-// insert character at the current position and move the cursor.
+// insert a utf8 code point at the current position and move the cursor.
 // if the gap is empty, expand the buffer
-void GapBuffer :: insert(char c) {
+void GapBuffer :: insert(const UTF8CodePoint& ucp) {
     if (l == r) {
         expand();
     }
-    text[l++] = c;
-}
-
-
-// insert a UTF8 sequence at the current position
-void GapBuffer :: insert(const std::string& sequence) {
-    for (char c : sequence) {
-        insert(c);
-    }
+    text[l++] = std::move(ucp);
 }
 
 
@@ -101,9 +99,9 @@ void GapBuffer :: del() {
 
 // expand the buffer to double its size
 void GapBuffer :: expand() {
-    auto grown_buffer= std::make_unique<char[]>(sz * 2);
-    std::memcpy(grown_buffer.get(), text.get(), l);
-    std::memcpy(grown_buffer.get() + r + sz, text.get() + r, sz - r);
+    auto grown_buffer= std::make_unique<UTF8CodePoint[]>(sz * 2);
+    std::move(text.get(), text.get() + l, grown_buffer.get());
+    std::move(text.get() + r, text.get() + sz, grown_buffer.get() + r + sz);
 
     r = r + sz;
     sz *= 2;

@@ -4,7 +4,15 @@
 #include<unistd.h>
 #include<iostream>
 
-std:: string UTF8Reader :: next_input() {
+int seq_length(char c) {
+    if ((c & '\x80') == '\x00') return 1;
+    if ((c & '\xe0') == '\xc0') return 2;
+    if ((c & '\xf0') == '\xe0') return 3;
+    if ((c & '\xf8') == '\xf0') return 4;
+    return -1; 
+}
+
+UTF8CodePoint UTF8Reader :: next_input() {
     std::string input;
 
     char c{0};
@@ -39,14 +47,5 @@ std:: string UTF8Reader :: next_input() {
         input += c;
     }
 
-    return input;
-}
-
-
-int UTF8Reader :: seq_length(char c) {
-    if ((c & '\x80') == '\x00') return 1;
-    if ((c & '\xe0') == '\xc0') return 2;
-    if ((c & '\xf0') == '\xe0') return 3;
-    if ((c & '\xf8') == '\xf0') return 4;
-    return -1; 
+    return UTF8CodePoint{input};
 }
