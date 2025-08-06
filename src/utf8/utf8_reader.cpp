@@ -4,6 +4,9 @@
 #include<unistd.h>
 #include<iostream>
 
+
+// determine the utf8 sequence's length from
+// the first byte
 int seq_length(char c) {
     if ((c & '\x80') == '\x00') return 1;
     if ((c & '\xe0') == '\xc0') return 2;

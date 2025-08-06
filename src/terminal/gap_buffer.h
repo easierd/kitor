@@ -15,7 +15,7 @@
 class GapBuffer{
 
     // class invariant: l <= r && sz >= 0
-    //             
+    //                  newlines[] is ordered
 
     public:
         GapBuffer();
