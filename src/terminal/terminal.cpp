@@ -34,18 +34,17 @@ void Terminal :: clear() {
 // and draw it on the screen
 void Terminal::put(const UTF8CodePoint& ucp) {
     buffer.insert(ucp);
-    std::cout<<ucp.to_string();
-    redraw();
+    std::cout << ucp.to_string() << buffer.right_substring() << std::flush;
+    sync_cursor();
 }
 
 
 // clear the screen from the cursor position to the end of the line, 
 // rewrite the right substring of the buffer
 void Terminal :: redraw() {
-    std::cout << "\033[0J";
+    std::cout << "\033[0J" << std::flush;
     std::cout << buffer.right_substring();
     sync_cursor();
-    std::cout.flush();
 }
 
 
