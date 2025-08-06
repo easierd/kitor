@@ -17,8 +17,8 @@ add_executable(kitor
 )
 
 # Compile/link options for the main executable
-# target_compile_options(kitor PRIVATE -Wall -Wextra -fsanitize=address)
-# target_link_options(kitor PRIVATE -fsanitize=address)
+target_compile_options(kitor PRIVATE -Wall -Wextra -fsanitize=address)
+target_link_options(kitor PRIVATE -fsanitize=address)
 
 # Test executable
 add_executable(utf8_test

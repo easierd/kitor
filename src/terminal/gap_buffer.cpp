@@ -17,7 +17,7 @@ GapBuffer :: GapBuffer(int sz) {
 
     this->sz = sz;
     this->text = std::make_unique<UTF8CodePoint[]>(sz);
-    this->newlines = {};
+    this->newlines = {-1};
     this->l = 0;
     this->r = sz;
 }
@@ -35,6 +35,20 @@ std::string GapBuffer :: to_string() {
     return result;
 }
 
+
+// return the position of the previous newline
+int GapBuffer::prev_newline() const {
+    auto prev = std::lower_bound(newlines.begin(), newlines.end(), l);
+    if (prev == newlines.end()) 
+        return newlines.back();
+    
+    return *(prev - 1);
+}
+
+
+const std::vector<int> GapBuffer::get_newlines() const{
+    return newlines;
+}
 
 
 // return the substring from the cursor to the end of the buffer

@@ -22,7 +22,10 @@ class GapBuffer{
         GapBuffer(int sz);
 
         int get_l() const;
+        int prev_newline() const;
         int size() const;
+
+        const std::vector<int> get_newlines() const;
 
         void insert(const UTF8CodePoint&);
         void del();

@@ -12,7 +12,8 @@ Terminal::Terminal() {
     struct termios raw = orig_termios;
 
     raw.c_lflag &= ~(ECHO | ICANON | ISIG);
-   // raw.c_oflag &= ~OPOST;
+    // raw.c_iflag &= ~(ICRNL);
+    // raw.c_oflag &= ~OPOST;
 
     if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1) {
         throw std::runtime_error("Failed to set raw mode");
@@ -34,6 +35,8 @@ void Terminal :: clear() {
 // and draw it on the screen
 void Terminal::put(const UTF8CodePoint& ucp) {
     buffer.insert(ucp);
+    std::cout << "\033[0J" << std::flush;
+
     std::cout << ucp.to_string() << buffer.right_substring() << std::flush;
     sync_cursor();
 }
@@ -119,7 +122,15 @@ int Terminal::wincols() {
 
 // align buffer gap with the terminal cursor - guarantees the class invariant
 void Terminal :: sync_cursor() {
-    int x = 1 + buffer.get_l() / wincols();
-    int y = 1 + buffer.get_l() % wincols(); 
+    int n = buffer.prev_newline();
+    auto newlines = buffer.get_newlines();
+
+    int x = 1 + (buffer.get_l() - (n + 1)) / wincols();
+    for (size_t i = 1; i < newlines.size() && newlines[i] <= n; i++) {
+        x += 1 + (newlines[i] - (newlines[i - 1] + 1)) / wincols();
+    }
+
+    int y = 1 + (buffer.get_l() - (n + 1)) % wincols();
+    
     std::cout << "\033[" + std::to_string(x) + ";" + std::to_string(y) + "f" << std :: flush;
 }
