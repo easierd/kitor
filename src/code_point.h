@@ -13,7 +13,7 @@ class UTF8CodePoint {
 
     friend class UTF8Reader;
 
-    private:
+    public:
         UTF8CodePoint (const UTF8CodePoint&) = default;
         UTF8CodePoint& operator=(const UTF8CodePoint&) = default;
         UTF8CodePoint(UTF8CodePoint&&) = default;
