@@ -38,7 +38,9 @@ void Terminal::put(const UTF8CodePoint& ucp) {
     buffer.insert(ucp);
     std::cout << "\033[0J" << std::flush;
 
+    std::cout << "\033[?25l" << std::flush;
     std::cout << ucp.to_string() << buffer.to_string().substr(buffer.get_l(), last_visible() - buffer.get_l() + 1) << std::flush;
+
     sync_cursor();
 }
 
@@ -47,6 +49,7 @@ void Terminal::put(const UTF8CodePoint& ucp) {
 // rewrite the right substring of the buffer
 void Terminal :: redraw() {
     std::cout << "\033[0J" << std::flush;
+    std::cout << "\033[?25l" << std::flush;
     std::cout << buffer.to_string().substr(buffer.get_l(), last_visible() - buffer.get_l() + 1) ;
     sync_cursor();
 }
@@ -60,6 +63,7 @@ void Terminal::full_redraw() {
             s.pop_back();
         }
         std::cout<< "\033[H\033[2J\033[3J";
+        std::cout << "\033[?25l" << std::flush;
         std::cout << s << std::flush;
 }
 
@@ -121,7 +125,6 @@ void Terminal :: delete_last() {
     } else {
         std::cout << "\033[D \033[D";
     }
-    sync_cursor();
     redraw();
 }
 
@@ -204,5 +207,5 @@ void Terminal :: sync_cursor() {
     }    
 
     std::cout << "\033[" + std::to_string(x) + ";" + std::to_string(y) + "f" << std :: flush;
-
+    std::cout << "\033[?25h" << std::flush;
 }
