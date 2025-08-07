@@ -42,10 +42,14 @@ class Terminal {
         struct termios orig_termios;
         struct winsize w;
 
+        int hidden_row;
+
         GapBuffer buffer;
 
         bool is_raw_enabled;
 
         void sync_cursor();
         void redraw();
+        int first_visible();
+        int last_visible();
 };
