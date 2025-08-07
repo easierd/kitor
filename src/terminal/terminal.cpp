@@ -38,7 +38,7 @@ void Terminal::put(const UTF8CodePoint& ucp) {
     buffer.insert(ucp);
     std::cout << "\033[0J" << std::flush;
 
-    std::cout << ucp.to_string() << buffer.to_string().substr(buffer.get_l(), last_visible() - buffer.get_l()) << std::flush;
+    std::cout << ucp.to_string() << buffer.to_string().substr(buffer.get_l(), last_visible() - buffer.get_l() + 1) << std::flush;
     sync_cursor();
 }
 
@@ -47,24 +47,37 @@ void Terminal::put(const UTF8CodePoint& ucp) {
 // rewrite the right substring of the buffer
 void Terminal :: redraw() {
     std::cout << "\033[0J" << std::flush;
-    std::cout << buffer.to_string().substr(buffer.get_l(), last_visible() - buffer.get_l()) ;
+    std::cout << buffer.to_string().substr(buffer.get_l(), last_visible() - buffer.get_l() + 1) ;
     sync_cursor();
+}
+
+
+void Terminal::full_redraw() {
+        int fv = first_visible();
+        int lv = last_visible();
+        auto s = buffer.to_string().substr(fv, lv - fv + 1);
+        if (s.back() == '\n') {
+            s.pop_back();
+        }
+        std::cout<< "\033[H\033[2J\033[3J";
+        std::cout << s << std::flush;
 }
 
 
 int Terminal::first_visible() {
     int h = hidden_row;
-    int f = 0;
+    int max_f = h * wincols();
     auto n = buffer.get_newlines();
+    int f = n[0] + 1;
 
     for (size_t i = 1; h > 0 && i < n.size(); i++) {
-        f = n[i] + 1;
-        h -= 1 + (n[i] - (n[i - 1] + 1)) / wincols();
+        if (n[i] > max_f) break;
+        
+        h -= 1 + (n[i] - f) / wincols(); 
+        f = n[i] + 1; 
     }
 
-    f += wincols() * h;
-
-    return f;
+    return f + h * wincols();
 }
 
 
@@ -181,28 +194,13 @@ void Terminal :: sync_cursor() {
     if (x <= 0) {
         hidden_row--;
         x++;
-        std::cout << "\033[1;1H" << std::flush;
-        int fv = first_visible();
-        int lv = last_visible();
-        auto s = buffer.to_string().substr(fv, lv - fv + 1);
-        if (s.back() == '\n') {
-            s.pop_back();
-        }
-        std::cout<< "\033[H\033[2J\033[3J" << std::flush;
-        std::cout << s << std::flush;
+        full_redraw();
     }
 
     if (x > winrows()) {
         hidden_row++;
         x--;
-        int fv = first_visible();
-        int lv = last_visible();
-        auto s = buffer.to_string().substr(fv, lv - fv + 1);
-        if (s.back() == '\n') {
-            s.pop_back();
-        }
-        std::cout<< "\033[H\033[2J\033[3J";
-        std::cout << s << std::flush;
+        full_redraw();
     }    
 
     std::cout << "\033[" + std::to_string(x) + ";" + std::to_string(y) + "f" << std :: flush;

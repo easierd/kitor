@@ -54,4 +54,5 @@ class Terminal {
         void redraw();
         int first_visible();
         int last_visible();
+        void full_redraw();
 };

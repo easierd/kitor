@@ -116,7 +116,7 @@ void GapBuffer::up() {
 }
 
 
-// move the cursor to the next newline character, or to the last character if there's none
+// move the cursor next to the next newline character, or to the last character if there's none
 void GapBuffer::down() {
     auto next_nl = next_newline();
     if (next_nl == -1) {
@@ -124,7 +124,7 @@ void GapBuffer::down() {
             right();
         }
     } else {
-        while (l != next_nl) {
+        while (l <= next_nl) {
             right();
         }
     }
