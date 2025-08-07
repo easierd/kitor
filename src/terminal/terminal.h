@@ -26,6 +26,8 @@ class Terminal {
 
         void cursor_left();
         void cursor_right();
+        void cursor_up();
+        void cursor_down();
 
         void put(const UTF8CodePoint&);
 

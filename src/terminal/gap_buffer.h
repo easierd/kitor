@@ -23,6 +23,7 @@ class GapBuffer{
 
         int get_l() const;
         int prev_newline() const;
+        int next_newline() const;
         int size() const;
 
         const std::vector<int> get_newlines() const;
@@ -31,6 +32,8 @@ class GapBuffer{
         void del();
         void left();
         void right();
+        void up();
+        void down();
 
         std::string to_string();
         std::string right_substring();

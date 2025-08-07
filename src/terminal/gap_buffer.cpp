@@ -46,6 +46,16 @@ int GapBuffer::prev_newline() const {
 }
 
 
+// return the position of the next newline
+int GapBuffer::next_newline() const {
+    auto next = std::upper_bound(newlines.begin(), newlines.end(), l);
+    if (next == newlines.end()) {
+        return -1;
+    }
+    return *next;
+}
+
+
 const std::vector<int> GapBuffer::get_newlines() const{
     return newlines;
 }
@@ -90,6 +100,33 @@ void GapBuffer :: right() {
         text[l] = text[r];
         r++;
         l++;
+    }
+}
+
+
+// move the cursor to the previous newline character, or to position 0 if there's none
+void GapBuffer::up() {
+    auto prev_nl = prev_newline();
+    if (prev_nl == -1) {
+        prev_nl = 0;
+    }
+    while (l != prev_nl) {
+        left();
+    }
+}
+
+
+// move the cursor to the next newline character, or to the last character if there's none
+void GapBuffer::down() {
+    auto next_nl = next_newline();
+    if (next_nl == -1) {
+        while (r != sz) {
+            right();
+        }
+    } else {
+        while (l != next_nl) {
+            right();
+        }
     }
 }
 
