@@ -36,7 +36,7 @@ class GapBuffer{
         void down();
 
         std::string to_string();
-        std::string right_substring();
+        std::string substring(int, int) const;
 
         void expand();
 

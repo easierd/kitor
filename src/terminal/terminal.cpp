@@ -39,7 +39,9 @@ void Terminal::put(const UTF8CodePoint& ucp) {
     std::cout << "\033[0J" << std::flush;
 
     std::cout << "\033[?25l" << std::flush;
-    std::cout << ucp.to_string() << buffer.to_string().substr(buffer.get_l(), last_visible() - buffer.get_l() + 1) << std::flush;
+    std::cout << ucp.to_string() << std::flush;
+    auto s = buffer.substring(buffer.get_l(), last_visible() - buffer.get_l() + 1);
+    std::cout << buffer.substring(buffer.get_l(), last_visible() - buffer.get_l() + 1) << std::flush;
 
     sync_cursor();
 }
@@ -50,7 +52,7 @@ void Terminal::put(const UTF8CodePoint& ucp) {
 void Terminal :: redraw() {
     std::cout << "\033[0J" << std::flush;
     std::cout << "\033[?25l" << std::flush;
-    std::cout << buffer.to_string().substr(buffer.get_l(), last_visible() - buffer.get_l() + 1) ;
+    std::cout << buffer.substring(buffer.get_l(), last_visible() - buffer.get_l() + 1) ;
     sync_cursor();
 }
 
@@ -58,7 +60,7 @@ void Terminal :: redraw() {
 void Terminal::full_redraw() {
         int fv = first_visible();
         int lv = last_visible();
-        auto s = buffer.to_string().substr(fv, lv - fv + 1);
+        auto s = buffer.substring(fv, lv - fv + 1);
         if (s.back() == '\n') {
             s.pop_back();
         }
@@ -87,12 +89,12 @@ int Terminal::first_visible() {
 
 int Terminal::last_visible() {
     int v = winrows();
-    int l = first_visible();
+    int l = first_visible() - 1;
     auto n = buffer.get_newlines();
 
     for (size_t i = 1; v > 0 && i < n.size(); i++) {
         if (n[i] < l) continue;
-        v -= 1 + (n[i] - l) / wincols();
+        v -= 1 + (n[i] - (l + 1)) / wincols();
         l = n[i];
     }
 
@@ -195,14 +197,14 @@ void Terminal :: sync_cursor() {
     int y = 1 + (buffer.get_l() - (n + 1)) % wincols();
 
     if (x <= 0) {
-        hidden_row--;
-        x++;
+        hidden_row -= (-x + 1);
+        x += -x + 1;
         full_redraw();
     }
 
     if (x > winrows()) {
-        hidden_row++;
-        x--;
+        hidden_row+= (x - winrows());
+        x -= (x - winrows());
         full_redraw();
     }    
 

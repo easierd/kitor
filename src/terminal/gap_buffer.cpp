@@ -25,14 +25,7 @@ GapBuffer :: GapBuffer(int sz) {
 
 // return the actual text without the gap
 std::string GapBuffer :: to_string() {
-    std::string result {};
-    for (int i = 0; i < l; i++) {
-        result += text[i].to_string();
-    }
-
-    result += right_substring();
-
-    return result;
+    return substring(0, l) + substring(r, sz - r);
 }
 
 
@@ -48,7 +41,7 @@ int GapBuffer::prev_newline() const {
 
 // return the position of the next newline
 int GapBuffer::next_newline() const {
-    auto next = std::upper_bound(newlines.begin(), newlines.end(), l);
+    auto next = std::lower_bound(newlines.begin(), newlines.end(), l);
     if (next == newlines.end()) {
         return -1;
     }
@@ -61,11 +54,18 @@ const std::vector<int> GapBuffer::get_newlines() const{
 }
 
 
-// return the substring from the cursor to the end of the buffer
-std::string GapBuffer :: right_substring() {
+// return the substring [pos, pos + count) handling utf8 code units
+std::string GapBuffer :: substring(int pos, int count) const{
     std::string result {};
-    for (int i = r; i < sz; i++) {
-        result += text[i].to_string();
+    if (pos >= l && pos < r) {
+        pos += r - l;
+    }
+    for (; pos < sz && count > 0; pos++) {
+        if (pos >= l && pos < r) {
+            continue;
+        }
+        result += text[pos].to_string();
+        count--;
     }
 
     return result;
