@@ -36,8 +36,8 @@ void Terminal :: clear() {
 // and draw it on the screen
 void Terminal::put(const UTF8CodePoint& ucp) {
     auto inserted = buffer.insert(ucp);
-    auto s = buffer.substring(buffer.get_l() - inserted, last_visible() - buffer.get_l() + 1);
-    
+    auto s = buffer.substring(buffer.get_l() - inserted, last_visible() - (buffer.get_l() - inserted) + 1);
+
     std::cout << "\033[0J" 
         << "\033[?25l" 
         << s
