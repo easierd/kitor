@@ -9,6 +9,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <cstdint>
 
 #include "../utf8/code_point.h"
 
@@ -19,7 +20,6 @@ class GapBuffer{
 
     public:
         GapBuffer();
-        GapBuffer(int sz);
 
         int get_l() const;
         int prev_newline() const;
@@ -28,7 +28,7 @@ class GapBuffer{
 
         const std::vector<int> get_newlines() const;
 
-        void insert(const UTF8CodePoint&);
+        int insert(const UTF8CodePoint&);
         void del();
         void left();
         void right();
@@ -42,10 +42,15 @@ class GapBuffer{
 
     private:
         static constexpr int DEFAULT_SIZE {1024};
+        static constexpr size_t DEFAULT_TAB_SIZE {4};
+        static constexpr bool DEFAULT_TAB_EXPAND {true};
 
         int sz;
         std::unique_ptr<UTF8CodePoint[]> text;
         std::vector<int> newlines;
         int l;
         int r;
+
+        bool is_enabled_tab_expand;
+        int tab_size;
 };

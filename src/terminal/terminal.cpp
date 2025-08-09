@@ -35,12 +35,12 @@ void Terminal :: clear() {
 // insert the code point into the gap buffer
 // and draw it on the screen
 void Terminal::put(const UTF8CodePoint& ucp) {
-    buffer.insert(ucp);
-    auto s = buffer.substring(buffer.get_l(), last_visible() - buffer.get_l() + 1);
+    auto inserted = buffer.insert(ucp);
+    auto s = buffer.substring(buffer.get_l() - inserted, last_visible() - buffer.get_l() + 1);
+    
     std::cout << "\033[0J" 
         << "\033[?25l" 
-        << ucp.to_string() 
-        << buffer.substring(buffer.get_l(), last_visible() - buffer.get_l() + 1) 
+        << s
         << std::flush;
 
     sync_cursor();

@@ -8,10 +8,12 @@
 #include<string>
 
 class UTF8Reader;
+class GapBuffer;
 
 class UTF8CodePoint {
 
     friend class UTF8Reader;
+    friend class GapBuffer;
 
     public:
         UTF8CodePoint() = default;

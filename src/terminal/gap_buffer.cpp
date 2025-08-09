@@ -6,21 +6,18 @@
 
 #include <iostream>
 
-GapBuffer :: GapBuffer() : GapBuffer(GapBuffer::DEFAULT_SIZE) {
-}
-
-
-GapBuffer :: GapBuffer(int sz) {
-    if (sz < 0) {
-        throw std::length_error{"Buffer size must be positive."};
-    }
-
-    this->sz = sz;
+GapBuffer :: GapBuffer() {
+    this->sz = DEFAULT_SIZE;
     this->text = std::make_unique<UTF8CodePoint[]>(sz);
-    this->newlines = {-1};
     this->l = 0;
     this->r = sz;
+
+    this->newlines = {-1};
+
+    this->is_enabled_tab_expand = DEFAULT_TAB_EXPAND;
+    this->tab_size = DEFAULT_TAB_SIZE;
 }
+
 
 
 // return the actual text without the gap
@@ -134,7 +131,7 @@ void GapBuffer::down() {
 // insert a utf8 code point at the current position and move the cursor.
 // if the gap is empty, expand the buffer
 // increase index of all the following newline characters
-void GapBuffer :: insert(const UTF8CodePoint& ucp) {
+int GapBuffer :: insert(const UTF8CodePoint& ucp) {
     if (l == r) {
         expand();
     }
@@ -147,12 +144,28 @@ void GapBuffer :: insert(const UTF8CodePoint& ucp) {
         it++;
     }
 
+    int inserted {0};
+
+    if (ucp.to_string() == "\t") {
+        if (is_enabled_tab_expand) {
+            for (int i = 0; i < tab_size; i++ ){
+                text[l++] = UTF8CodePoint(" ");
+                inserted++;
+            }
+        } else {
+            // TODO: tabs handling
+        }
+    } else {
+        text[l++] = std::move(ucp);
+        inserted++;
+    }
+
     while(it != newlines.end()) {
-        (*it)++;
+        (*it)+=inserted;
         it++;
     }
 
-    text[l++] = std::move(ucp);
+    return inserted;
 }
 
 
