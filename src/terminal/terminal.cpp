@@ -71,9 +71,10 @@ void Terminal::full_redraw() {
         if (s.back() == '\n') {
             s.pop_back();
         }
-        std::cout<< "\033[H\033[2J\033[3J";
-        std::cout << "\033[?25l" << std::flush;
-        std::cout << s << std::flush;
+        std::cout<< "\033[H\033[2J\033[3J" 
+            << "\033[?25l" 
+            << s;
+
 }
 
 
