@@ -70,9 +70,12 @@ std::vector<UTF8CodePoint> UTF8Reader::read_buffer(const std::vector<char>& buff
             continue;
         }
 
-        while(--seq_len > 0) {
-            input += buffer[i++];
+        auto j{i};
+        while (j < buffer.size() && --seq_len > 0) {
+            input += buffer[++j];
         }
+        i = j;
+
 
         utf8_buffer.push_back(UTF8CodePoint{input});
     }
