@@ -36,12 +36,12 @@ void Terminal :: clear() {
 // and draw it on the screen
 void Terminal::put(const UTF8CodePoint& ucp) {
     buffer.insert(ucp);
-    std::cout << "\033[0J" << std::flush;
-
-    std::cout << "\033[?25l" << std::flush;
-    std::cout << ucp.to_string() << std::flush;
     auto s = buffer.substring(buffer.get_l(), last_visible() - buffer.get_l() + 1);
-    std::cout << buffer.substring(buffer.get_l(), last_visible() - buffer.get_l() + 1) << std::flush;
+    std::cout << "\033[0J" 
+        << "\033[?25l" 
+        << ucp.to_string() 
+        << buffer.substring(buffer.get_l(), last_visible() - buffer.get_l() + 1) 
+        << std::flush;
 
     sync_cursor();
 }
