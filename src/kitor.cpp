@@ -9,7 +9,7 @@ Kitor::Kitor(const std::string& filename) :
     
     terminal.save_state();
     terminal.clear();
-    
+
     load_file(filename);
 }
 
@@ -76,10 +76,6 @@ Kitor::~Kitor() {
 
 void Kitor::load_file(const std::string& filename) {
     std::ifstream file{filename, std::ios::binary | std::ios::ate};
-
-    if (!file) {
-        throw std::runtime_error{"Cannot open file: " + filename};
-    }
 
     std::streamsize size = file.tellg();
     if (size > 0) {
