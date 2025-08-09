@@ -128,15 +128,26 @@ void GapBuffer::down() {
 }
 
 
-// insert a utf8 code point at the current position and move the cursor.
+
 // if the gap is empty, expand the buffer
-// increase index of all the following newline characters
 int GapBuffer :: insert(const UTF8CodePoint& ucp) {
     if (l == r) {
         expand();
     }
 
     auto next_nl_pos = std::lower_bound(newlines.begin(), newlines.end(), l);
+
+    auto inserted {_insert(ucp, next_nl_pos)};
+    
+    adjust_newline(inserted, next_nl_pos);
+
+    return inserted;
+}
+
+
+// insert a utf8 code point at the current position
+// and move the cursor according to the configuration.
+int GapBuffer::_insert(const UTF8CodePoint& ucp, std::vector<int>::iterator& next_nl_pos) {
     int inserted {0};
 
     if (ucp.to_string() == "\t") {
@@ -158,12 +169,15 @@ int GapBuffer :: insert(const UTF8CodePoint& ucp) {
         inserted++;
     }
 
+    return inserted;
+}
+
+
+void GapBuffer::adjust_newline(int inserted, std::vector<int>::iterator& next_nl_pos) {
     while(next_nl_pos != newlines.end()) {
-        (*next_nl_pos)+=inserted;
+        (*next_nl_pos) += inserted;
         next_nl_pos++;
     }
-
-    return inserted;
 }
 
 

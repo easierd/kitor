@@ -53,4 +53,8 @@ class GapBuffer{
 
         bool is_enabled_tab_expand;
         int tab_size;
+
+        int _insert(const UTF8CodePoint&, std::vector<int>::iterator&);
+        void adjust_newline(int, std::vector<int>::iterator&);
+    
 };
