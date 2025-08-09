@@ -136,14 +136,7 @@ int GapBuffer :: insert(const UTF8CodePoint& ucp) {
         expand();
     }
 
-    // O(log N) guaranteed 
-    auto it = std::lower_bound(newlines.begin(), newlines.end(), l);
-
-    if (ucp.to_string() == "\n") {
-        it = newlines.insert(it, l);
-        it++;
-    }
-
+    auto next_nl_pos = std::lower_bound(newlines.begin(), newlines.end(), l);
     int inserted {0};
 
     if (ucp.to_string() == "\t") {
@@ -155,14 +148,19 @@ int GapBuffer :: insert(const UTF8CodePoint& ucp) {
         } else {
             // TODO: tabs handling
         }
+
     } else {
+        if (ucp.to_string() == "\n") {
+            next_nl_pos = newlines.insert(next_nl_pos, l);
+            next_nl_pos++;
+        }
         text[l++] = std::move(ucp);
         inserted++;
     }
 
-    while(it != newlines.end()) {
-        (*it)+=inserted;
-        it++;
+    while(next_nl_pos != newlines.end()) {
+        (*next_nl_pos)+=inserted;
+        next_nl_pos++;
     }
 
     return inserted;
