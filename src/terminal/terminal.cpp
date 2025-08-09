@@ -47,6 +47,13 @@ void Terminal::put(const UTF8CodePoint& ucp) {
 }
 
 
+void Terminal::put_buffer(const std::vector<UTF8CodePoint>& utf8_buffer) {
+    for (auto& ucp : utf8_buffer) {
+        put(ucp);
+    }
+}
+
+
 // clear the screen from the cursor position to the end of the line, 
 // rewrite the right substring of the buffer
 void Terminal :: redraw() {

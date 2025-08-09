@@ -5,9 +5,20 @@
 
 
 Kitor::Kitor(const std::string& filename) : 
-                os{std::ofstream{filename}} {
+                filename{filename} {
+    
     terminal.save_state();
     terminal.clear();
+
+    std::ifstream file{filename, std::ios::binary | std::ios::ate};
+    std::streamsize size = file.tellg();
+    if (size > 0) {
+        file.seekg(0, std::ios::beg);
+        std::vector<char> buffer(size);
+        file.read(buffer.data(), size);
+        std::vector<UTF8CodePoint> utf8_buffer {reader.read_buffer(buffer)};
+        terminal.put_buffer(utf8_buffer);
+    }
 }
 
 
@@ -64,6 +75,7 @@ void Kitor::run() {
 
 
 Kitor::~Kitor() {
+    std::ofstream os{filename};
     os << terminal.get_out();
     os.close();
     terminal.restore_state();

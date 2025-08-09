@@ -12,7 +12,7 @@ class Kitor {
         void run();
         ~Kitor();
     private:
-        std :: ofstream os;
+        std::string filename;
         UTF8Reader reader;
         Terminal terminal;
 };

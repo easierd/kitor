@@ -52,3 +52,30 @@ UTF8CodePoint UTF8Reader :: next_input() {
 
     return UTF8CodePoint{input};
 }
+
+
+
+std::vector<UTF8CodePoint> UTF8Reader::read_buffer(const std::vector<char>& buffer) {
+    std::vector<UTF8CodePoint> utf8_buffer{};
+    for (auto i = 0U; i < buffer.size(); i++) {
+        std::string input{};
+        char c {buffer[i]};
+        auto seq_len {seq_length(c)};
+
+        input += c;
+
+        if (seq_len == -1) {
+            // TODO: log error
+            utf8_buffer.push_back(UTF8CodePoint{input});
+            continue;
+        }
+
+        while(--seq_len > 0) {
+            input += buffer[i++];
+        }
+
+        utf8_buffer.push_back(UTF8CodePoint{input});
+    }
+
+    return utf8_buffer;
+}

@@ -31,6 +31,8 @@ class Terminal {
 
         void put(const UTF8CodePoint&);
 
+        void put_buffer(const std::vector<UTF8CodePoint>&);
+
         void save_state();
         void restore_state();
 
