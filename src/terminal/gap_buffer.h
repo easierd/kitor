@@ -27,6 +27,7 @@ class GapBuffer{
         int size() const;
 
         const std::vector<int> get_newlines() const;
+        const std::vector<int> get_tabs() const;
 
         int insert(const UTF8CodePoint&);
         void del();
@@ -43,18 +44,20 @@ class GapBuffer{
     private:
         static constexpr int DEFAULT_SIZE {1024};
         static constexpr size_t DEFAULT_TAB_SIZE {4};
-        static constexpr bool DEFAULT_TAB_EXPAND {true};
+        static constexpr bool DEFAULT_TAB_EXPAND {false};
 
         int sz;
         std::unique_ptr<UTF8CodePoint[]> text;
         std::vector<int> newlines;
+        std::vector<int> tabs;
         int l;
         int r;
 
         bool is_enabled_tab_expand;
         int tab_size;
 
-        int _insert(const UTF8CodePoint&, std::vector<int>::iterator&);
+        int _insert(const UTF8CodePoint&, std::vector<int>::iterator&, std::vector<int>::iterator&);
         void adjust_newline(int, std::vector<int>::iterator&);
+        void adjust_tabs(std::vector<int>::iterator&);
     
 };

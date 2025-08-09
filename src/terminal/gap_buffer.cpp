@@ -13,6 +13,7 @@ GapBuffer :: GapBuffer() {
     this->r = sz;
 
     this->newlines = {-1};
+    this->tabs = {0};
 
     this->is_enabled_tab_expand = DEFAULT_TAB_EXPAND;
     this->tab_size = DEFAULT_TAB_SIZE;
@@ -46,8 +47,13 @@ int GapBuffer::next_newline() const {
 }
 
 
-const std::vector<int> GapBuffer::get_newlines() const{
+const std::vector<int> GapBuffer::get_newlines() const {
     return newlines;
+}
+
+
+const std::vector<int> GapBuffer::get_tabs() const {
+    return tabs;
 }
 
 
@@ -136,10 +142,12 @@ int GapBuffer :: insert(const UTF8CodePoint& ucp) {
     }
 
     auto next_nl_pos = std::lower_bound(newlines.begin(), newlines.end(), l);
+    auto next_tab_pos = std::lower_bound(tabs.begin(), tabs.end(), l);
 
-    auto inserted {_insert(ucp, next_nl_pos)};
+    auto inserted {_insert(ucp, next_nl_pos, next_tab_pos)};
     
     adjust_newline(inserted, next_nl_pos);
+    adjust_tabs(next_tab_pos);
 
     return inserted;
 }
@@ -147,24 +155,26 @@ int GapBuffer :: insert(const UTF8CodePoint& ucp) {
 
 // insert a utf8 code point at the current position
 // and move the cursor according to the configuration.
-int GapBuffer::_insert(const UTF8CodePoint& ucp, std::vector<int>::iterator& next_nl_pos) {
+int GapBuffer::_insert(const UTF8CodePoint& ucp, std::vector<int>::iterator& next_nl_pos,
+    std::vector<int>::iterator& next_tab_pos) {
     int inserted {0};
 
-    if (ucp.to_string() == "\t") {
-        if (is_enabled_tab_expand) {
-            for (int i = 0; i < tab_size; i++ ){
-                text[l++] = UTF8CodePoint(" ");
-                inserted++;
-            }
-        } else {
-            // TODO: tabs handling
+    if (ucp.to_string() == "\t" && is_enabled_tab_expand) {
+        for (int i = 0; i < tab_size; i++ ){
+            text[l++] = UTF8CodePoint(" ");
+            inserted++;
         }
-
     } else {
         if (ucp.to_string() == "\n") {
             next_nl_pos = newlines.insert(next_nl_pos, l);
             next_nl_pos++;
         }
+
+        if (ucp.to_string() == "\t") {
+            next_tab_pos = tabs.insert(next_tab_pos, l);
+            next_tab_pos++;
+        }
+
         text[l++] = std::move(ucp);
         inserted++;
     }
@@ -179,6 +189,16 @@ void GapBuffer::adjust_newline(int inserted, std::vector<int>::iterator& next_nl
         next_nl_pos++;
     }
 }
+
+
+void GapBuffer::adjust_tabs(std::vector<int>::iterator& next_tab_pos) {
+    while(next_tab_pos != tabs.end()) {
+        (*next_tab_pos) ++;
+        next_tab_pos++;
+    }
+}
+
+
 
 
 // delete the character at the left of the cursor
