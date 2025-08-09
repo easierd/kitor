@@ -15,4 +15,6 @@ class Kitor {
         std::string filename;
         UTF8Reader reader;
         Terminal terminal;
+
+        void load_file(const std::string&);
 };

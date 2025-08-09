@@ -9,16 +9,8 @@ Kitor::Kitor(const std::string& filename) :
     
     terminal.save_state();
     terminal.clear();
-
-    std::ifstream file{filename, std::ios::binary | std::ios::ate};
-    std::streamsize size = file.tellg();
-    if (size > 0) {
-        file.seekg(0, std::ios::beg);
-        std::vector<char> buffer(size);
-        file.read(buffer.data(), size);
-        std::vector<UTF8CodePoint> utf8_buffer {reader.read_buffer(buffer)};
-        terminal.put_buffer(utf8_buffer);
-    }
+    
+    load_file(filename);
 }
 
 
@@ -79,4 +71,22 @@ Kitor::~Kitor() {
     os << terminal.get_out();
     os.close();
     terminal.restore_state();
+}
+
+
+void Kitor::load_file(const std::string& filename) {
+    std::ifstream file{filename, std::ios::binary | std::ios::ate};
+
+    if (!file) {
+        throw std::runtime_error{"Cannot open file: " + filename};
+    }
+
+    std::streamsize size = file.tellg();
+    if (size > 0) {
+        file.seekg(0, std::ios::beg);
+        std::vector<char> buffer(size);
+        file.read(buffer.data(), size);
+        std::vector<UTF8CodePoint> utf8_buffer {reader.read_buffer(buffer)};
+        terminal.put_buffer(utf8_buffer);
+    }
 }
