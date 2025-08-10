@@ -57,9 +57,9 @@ void Terminal::put_buffer(const std::vector<UTF8CodePoint>& utf8_buffer) {
 // clear the screen from the cursor position to the end of the line, 
 // rewrite the right substring of the buffer
 void Terminal :: redraw() {
-    std::cout << "\033[0J" << std::flush;
-    std::cout << "\033[?25l" << std::flush;
-    std::cout << buffer.substring(buffer.get_l(), last_visible() - buffer.get_l() + 1) ;
+    std::cout << "\033[0J" 
+        << "\033[?25l" 
+        << buffer.substring(buffer.get_l(), last_visible() - buffer.get_l() + 1);
     sync_cursor();
 }
 
@@ -101,7 +101,7 @@ int Terminal::last_visible() {
     auto n = buffer.get_newlines();
 
     for (size_t i = 1; v > 0 && i < n.size(); i++) {
-        if (n[i] < l) continue;
+        if (n[i] <= l) continue;
         v -= 1 + (n[i] - (l + 1)) / wincols();
         l = n[i];
     }
@@ -128,13 +128,7 @@ void Terminal :: restore_state() {
 
 void Terminal :: delete_last() {
     buffer.del();
-    if (buffer.get_l() % wincols() == wincols() - 1) {
-        sync_cursor();
-        std::cout << " ";
-        std::cout.flush();
-    } else {
-        std::cout << "\033[D \033[D";
-    }
+    sync_cursor();
     redraw();
 }
 
