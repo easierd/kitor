@@ -42,8 +42,7 @@ class GapBuffer{
 
     private:
         static constexpr int DEFAULT_SIZE {1024};
-        static constexpr size_t DEFAULT_TAB_SIZE {4};
-        static constexpr bool DEFAULT_TAB_EXPAND {true};
+        static constexpr size_t DEFAULT_TAB_SIZE {8};
 
         int sz;
         std::unique_ptr<UTF8CodePoint[]> text;

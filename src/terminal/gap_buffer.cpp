@@ -14,7 +14,6 @@ GapBuffer :: GapBuffer() {
 
     this->newlines = {-1};
 
-    this->is_enabled_tab_expand = DEFAULT_TAB_EXPAND;
     this->tab_size = DEFAULT_TAB_SIZE;
 }
 
@@ -151,15 +150,11 @@ int GapBuffer::_insert(const UTF8CodePoint& ucp, std::vector<int>::iterator& nex
     int inserted {0};
 
     if (ucp.to_string() == "\t") {
-        if (is_enabled_tab_expand) {
-            for (int i = 0; i < tab_size; i++ ){
-                text[l++] = UTF8CodePoint(" ");
+            auto spaces {tab_size - (l % tab_size)};
+            for (int i = 0; i < spaces; i++ ){
+                text[l++] = std::move(UTF8CodePoint(" "));
                 inserted++;
             }
-        } else {
-            // TODO: tabs handling
-        }
-
     } else {
         if (ucp.to_string() == "\n") {
             next_nl_pos = newlines.insert(next_nl_pos, l);
